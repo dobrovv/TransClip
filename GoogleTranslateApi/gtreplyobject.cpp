@@ -1,6 +1,7 @@
-#include "gtreplyobject.h"
+#include "GTReplyObject.h"
 
 #include <QDebug>
+#include <QRegularExpression>
 
 // Object to return on index-out-of-range access
 static GTReplyObject invalidObject;
@@ -36,6 +37,11 @@ bool GTReplyObject::isString() const
 bool GTReplyObject::isObject() const
 {
     return obj_type == ARRAY;
+}
+
+GTReplyObject::GTReplyObjectType GTReplyObject::type() const
+{
+    return obj_type;
 }
 
 ////////////
@@ -84,11 +90,6 @@ const GTReplyObject & GTReplyObject::operator[](int which) const
     return obj_childs[which];
 }
 
-//const QList<GTReplyObject> & GTReplyObject::children() const
-//{
-//    return obj_childs;
-//}
-
 ///////////////////////////////////////////
 // generate an GTReplyObject from a string
 
@@ -103,14 +104,21 @@ GTReplyObject GTReplyObject::fromRawString(const QString &rawReply)
 ///////////////////////////////////////////
 // generate a string from an GTReplyObject
 
-QString GTReplyObject::toRawString() const {
+QString GTReplyObject::toRawString(bool prettyDecoded) const {
     QString res;
 
     if ( obj_type == GTReplyObject::ARRAY ) {
         QStringList childsStr;
         foreach ( GTReplyObject child, obj_childs )
-             childsStr << child.toRawString();
-        res = '[' + childsStr.join(',') + ']';
+            childsStr << child.toRawString(prettyDecoded);
+
+        if (!prettyDecoded) {
+            res = '[' + childsStr.join(',') + ']';
+        } else {
+            QString childJoin = "\n" + childsStr.join(",\n");
+            childJoin.replace(QRegularExpression("\\n"), "\n\t");
+            res = "[" + childJoin+ "\n]";
+        }
 
     } else {
         res = obj_string;
@@ -147,7 +155,7 @@ uint readObjectParam(const QString& raw, uint ofst_start, GTReplyObject& outPara
         if ( raw[ofst+len] == ',' || raw[ofst+len] == ']' ) {
             break;
 
-        // skip over the string ("exam\"ple"),
+            // skip over the string ("exam\"ple"),
         } else if ( raw[ofst+len] == '"' ) {
             for ( len+=1; ofst+len < (uint)raw.length(); ++len ) {
                 // skip the escapeped charcater (ex. '\"')
@@ -171,19 +179,19 @@ uint readObjectParam(const QString& raw, uint ofst_start, GTReplyObject& outPara
     if ( param.isEmpty() ) {
         outParam.obj_type = GTReplyObject::UNDEF;
 
-    // it's a boolean
+        // it's a boolean
     } else if ( param == "true" ) {
         outParam.obj_type = GTReplyObject::BOOL;
 
     } else if ( param == "false" ) {
         outParam.obj_type = GTReplyObject::BOOL;
 
-    // it's a string
+        // it's a string
     } else if ( param[0] == '\"' && param[param.size()-1] == '\"' ){
         outParam.obj_type = GTReplyObject::STRING;
         param = param.mid(1, param.size()-1-1);   // remove double quotes (") surrounding the param
 
-    // it's a number
+        // it's a number
     } else {
         outParam.obj_type = GTReplyObject::NUM;
         bool isNumber;
@@ -191,7 +199,7 @@ uint readObjectParam(const QString& raw, uint ofst_start, GTReplyObject& outPara
 
         if (!isNumber){
             outParam.obj_type = GTReplyObject::UNDEF;
-            qDebug() << Q_FUNC_INFO << "Parser Error: String is not a valid parameter:" << param;
+            qDebug() << Q_FUNC_INFO << "[Parser] Error: String is not a valid parameter:" << param;
         }
     }
 

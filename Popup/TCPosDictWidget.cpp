@@ -2,15 +2,15 @@
 #include <QHeaderView>
 
 struct TCPosDictEntryItem : public QTreeWidgetItem{
-    TCPosDictEntryItem(const GTDictPosEntry& entry){
+    TCPosDictEntryItem(const GTPosDictEntry& entry){
 
-        QString trans = entry.translation;
+        QString trans = entry.wordTarget;
         if ( trans.size() > 12 ) {
-            trans.insert(trans.size()/2, "-\n");
+            trans.insert(trans.size()/2, "-\n ");
         }
 
         setText(0, trans);
-        setText(1, entry.reTranslations.join(", "));
+        setText(1, entry.wordRetranslations.join(", "));
 
         setTextColor(1, QColor("#777"));
     }
@@ -18,16 +18,16 @@ struct TCPosDictEntryItem : public QTreeWidgetItem{
 
 struct TCPosDictItem : public QTreeWidgetItem{
 
-    TCPosDictItem(const GTDictPos& dict){
+    TCPosDictItem(const GTPosDict& dict){
 
         int index = 0;
         QStringList entriesWord;
-        foreach (const GTDictPosEntry & entry, dict.entries) {
+        foreach (const GTPosDictEntry & entry, dict.entries) {
             TCPosDictEntryItem *entrieItem = new TCPosDictEntryItem(entry);
             insertChild(index++, entrieItem);
-            entriesWord << entry.translation;
+            entriesWord << entry.wordTarget;
         }
-        setText(0, dict.posName);
+        setText(0, dict.posNameHl);
         setText(1, entriesWord.join(", "));
 
         QFont font;
@@ -56,12 +56,12 @@ TCPosDictWidget::TCPosDictWidget(QWidget *parent) :
     header()->setSectionResizeMode(1, QHeaderView::Stretch);
 }
 
-void TCPosDictWidget::setPosDictionary(const QList<GTDictPos>& posDicts)
+void TCPosDictWidget::setPosDictionary(const QList<GTPosDict> &posDicts)
 {
     QTreeWidget::clear();
     int index =0;
 
-    foreach ( const GTDictPos& dict, posDicts ) {
+    foreach ( const GTPosDict& dict, posDicts ) {
         TCPosDictItem *posDictItem = new TCPosDictItem(dict);
         insertTopLevelItem(index++, posDictItem);
     }

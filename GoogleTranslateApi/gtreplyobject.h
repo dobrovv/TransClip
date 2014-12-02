@@ -1,3 +1,8 @@
+///////////////////////////////////////////////////////////////
+// This class implements only the parser
+//      for replies fetched from Google Translate Web Gadget
+// class GTApiTranslate provides an interface for desired information
+
 #ifndef GTREPLYOBJECT_H
 #define GTREPLYOBJECT_H
 
@@ -10,12 +15,15 @@ class GTReplyObject
 public:
     GTReplyObject();
 
+    enum GTReplyObjectType {UNDEF=0, BOOL, NUM, STRING, ARRAY};
+
     /* Object type checkers */
     bool    isNull() const;
     bool    isBool() const;
     bool    isNum()  const;
     bool    isString() const;
     bool    isObject() const;
+    GTReplyObjectType type() const;
 
     /* Getters */
     bool          toBool() const;
@@ -24,7 +32,7 @@ public:
     QStringList   toStringList() const;
     int           size() const;
 
-    const GTReplyObject &child(int which) const;
+    const GTReplyObject & child(int which) const;
     const GTReplyObject & operator[](int i) const;
 
     /* Iterators */
@@ -38,9 +46,7 @@ public:
     }
 
     static GTReplyObject fromRawString (const QString& rawReply);
-    QString toRawString() const;
-
-    enum GTReplyObjectType {UNDEF=0, BOOL, NUM, STRING, ARRAY};
+    QString toRawString(bool prettyDecoded = false) const;
 
 private:
     GTReplyObjectType       obj_type;

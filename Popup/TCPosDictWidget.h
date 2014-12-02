@@ -13,7 +13,7 @@ public:
 signals:
 
 public slots:
-    void setPosDictionary(const QList<GTDictPos>& posDicts);
+    void setPosDictionary(const QList<GTPosDict>& posDicts);
 
 };
 

@@ -13,7 +13,7 @@ public:
     explicit TCPopup(QWidget *parent = 0);
     ~TCPopup();
 
-    inline bool isPopupDialog() {return isDialogPopup;}
+    inline bool popupStaysOnTop() {return staysOnTop;}
 
 signals:
 
@@ -22,7 +22,9 @@ public slots:
     void showPopup(bool giveFocus = true );
 
     // Hides the popup window, effectively closing it.
-    void hideWindow();
+    void hidePopup();
+
+    void setStaysOnTop(bool onTop = true );
 
 private:
 
@@ -31,7 +33,8 @@ private:
     // Ungrabs mouse and uninstalls global event filter.
     void uninterceptMouse();
 
-    bool isDialogPopup;
+    bool staysOnTop;
+
     QString pendingInputText, inputText;
 
     bool mouseEnteredOnce;
@@ -62,8 +65,6 @@ private:
     virtual void showEvent( QShowEvent * );
 
 private slots:
-
-    void changePopupToDialog( bool checked );
 
     void hideTimerExpired();
 

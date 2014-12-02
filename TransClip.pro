@@ -4,19 +4,23 @@ SOURCES += \
     main.cpp \
     Popup/TCPopupWidget.cpp \
     Popup/TCPopup.cpp \
+    Popup/TCLangBox.cpp \
     Popup/TCPosDictWidget.cpp \
-    GoogleTranslateApi/gtapi.cpp \
-    GoogleTranslateApi/gtapitranslation.cpp \
-    GoogleTranslateApi/gtreplyobject.cpp \
-
+    Popup/TCDefDictWidget.cpp \
+    GoogleTranslateApi/GTApi.cpp \
+    GoogleTranslateApi/GTApiTranslation.cpp \
+    GoogleTranslateApi/GTReplyObject.cpp
 
 HEADERS += \
     Popup/TCPopupWidget.h \
     Popup/TCPopup.h \
+    Popup/TCLangBox.h \
     Popup/TCPosDictWidget.h \
-    GoogleTranslateApi/gtapi.h \
-    GoogleTranslateApi/gtapitranslation.h \
-    GoogleTranslateApi/gtreplyobject.h \
+    Popup/TCDefDictWidget.h \
+    GoogleTranslateApi/GTApi.h \
+    GoogleTranslateApi/GTApiTranslation.h \
+    GoogleTranslateApi/GTReplyObject.h \
+    GoogleTranslateApi/GTLangCode.h
 
 VERSION = 0.1
 QMAKE_TARGET_COMPANY = VaSaKed
@@ -25,4 +29,4 @@ QMAKE_TARGET_DESCRIPTION = TransClip - Online Translator
 QMAKE_TARGET_COPYRIGHT =
 
 OTHER_FILES += \
-    GoogleTranslateApi/GoogleTranslateFormat.txt
+    GoogleTranslateApi/GoogleWebTranslateFormat.txt

@@ -1,7 +1,7 @@
 #ifndef GTAPI_H
 #define GTAPI_H
 
-#include "gtapitranslation.h"
+#include "GTApiTranslation.h"
 
 #include <QObject>
 
@@ -20,8 +20,11 @@ signals:
     void translationReady( const GTApiTranslation & gtApiTr );
 
 public slots:
-    void translate(const QString& text, const QString& dstLang,
-                   const QString& srcLang = "auto", const QString& posLang = "en");
+
+    // Translates the text, parsed responce is returned with the translationReady signal
+    void translate(const QString& text, const QString& targetLang,
+                   const QString& sourceLang = "auto", const QString& interfaceLang = "en");
+
 private slots:
     void onReplyFinished();
 };

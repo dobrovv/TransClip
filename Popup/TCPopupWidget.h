@@ -2,8 +2,9 @@
 #define TCPOPUPWIDGET_H
 
 #include "TCPopup.h"
+#include "TCLangBox.h"
 #include "TCPosDictWidget.h"
-#include "GoogleTranslateApi/gtapi.h"
+#include "GoogleTranslateApi/GTApi.h"
 
 #include <QWidget>
 #include <QLineEdit>
@@ -17,13 +18,10 @@ class TCPopupWidget : public QWidget
     TCPopup *popup;
     QLineEdit *lneInput;
     QLabel *lblOutput;
-    QLabel *lblLangSelect;
+    TCLangBox *langBox;
     QPushButton *btnDialogPopup;
 
     TCPosDictWidget *posDictWgt;
-
-    QString src_lang;
-    QString dst_lang;
 
 public:
     explicit TCPopupWidget(TCPopup *parent);

@@ -1,14 +1,12 @@
-#include "tcpopup.h"
+#include "TCPopup.h"
 
 #include <QApplication>
 #include <QCursor>
-//#include <QPixmap>
-//#include <QBitmap>
-//#include <QMenu>
 #include <QACtion>
 #include <QMouseEvent>
 #include <QDesktopWidget>
 #include <QTimer>
+#include <QDebug>
 
 #ifdef Q_OS_WIN
     #include <windows.h>
@@ -19,9 +17,9 @@ static Qt::WindowFlags popupWindowFlags = Qt::Tool | Qt::FramelessWindowHint | Q
 TCPopup::TCPopup(QWidget *parent) :
     QMainWindow(parent)
 {
-    isDialogPopup = false;
+    staysOnTop = false;
 
-    if ( isDialogPopup ) {
+    if ( staysOnTop ) {
         setWindowFlags( Qt::Dialog );
     } else {
         setWindowFlags( popupWindowFlags );
@@ -31,7 +29,7 @@ TCPopup::TCPopup(QWidget *parent) :
     escapeAction->setShortcut( QKeySequence( "Esc" ) );
     addAction( escapeAction );
     connect( escapeAction, SIGNAL( triggered() ),
-             this, SLOT( hideWindow() ) );
+             this, SLOT( hidePopup() ) );
 
     hideTimer = new QTimer(this);
     hideTimer->setSingleShot( true );
@@ -52,13 +50,13 @@ TCPopup::~TCPopup()
 
 }
 
-void TCPopup::showPopup( bool giveFocus)
+void TCPopup::showPopup( bool giveFocus )
 {
     if ( !isVisible() )
     {
         // Need to show the window
 
-        if ( !isDialogPopup )
+        if ( !staysOnTop )
         {
             // Decide where should the window land
 
@@ -103,7 +101,7 @@ void TCPopup::showPopup( bool giveFocus)
             raise();
         }
 
-        if ( !isDialogPopup )
+        if ( !staysOnTop )
         {
             mouseEnteredOnce = false;
             // Need to monitor the mouse so we know when to hide the window
@@ -113,7 +111,7 @@ void TCPopup::showPopup( bool giveFocus)
         // This produced some funky mouse grip-related bugs so we commented it out
         //QApplication::processEvents(); // Make window appear immediately no matter what
     }
-    else if ( isDialogPopup )
+    else if ( staysOnTop )
     {
         // Pinned-down window isn't always on top, so we need to raise it
         show();
@@ -121,16 +119,19 @@ void TCPopup::showPopup( bool giveFocus)
         raise();
     }
 
-    if ( isDialogPopup )
-        setWindowTitle( "GoldenDict" );
+    if ( staysOnTop )
+        setWindowTitle( "TransClip" );
 
 #ifdef Q_OS_WIN
-    SwitchToThisWindow(reinterpret_cast<HWND>(winId()), true);
+    /* To much pain in the ass with all this Qt hacks, just put it on top please!!! */
+
+    HWND hwndPopup = reinterpret_cast<HWND>(winId());
+    SetWindowPos( hwndPopup, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE );
 #endif
 
 }
 
-void TCPopup::hideWindow()
+void TCPopup::hidePopup()
 {
     uninterceptMouse();
     hideTimer->stop();
@@ -228,7 +229,7 @@ void TCPopup::reactOnMouseMove(const QPoint &p)
             // the user just moved the cursor further away from the window.
 
             if ( !mouseEnteredOnce )
-                hideWindow();
+                hidePopup();
             else
                 hideTimer->start();
         }
@@ -242,7 +243,7 @@ void TCPopup::mousePressEvent(QMouseEvent *ev)
 
     if ( !frameGeometry().contains( ev->globalPos() ) )
     {
-        hideWindow();
+        hidePopup();
 
         return;
     }
@@ -291,7 +292,7 @@ void TCPopup::leaveEvent(QEvent *event)
     // If the dialog is pinned, we don't hide the popup.
     // If some mouse buttons are pressed, we don't hide the popup either,
     // since it indicates the move operation is underway.
-    if ( !isDialogPopup && !geometry().contains( QCursor::pos() ) &&
+    if ( !staysOnTop && !geometry().contains( QCursor::pos() ) &&
          QApplication::mouseButtons() == Qt::NoButton )
     {
         hideTimer->start();
@@ -317,15 +318,15 @@ void TCPopup::showEvent(QShowEvent *ev)
     QMainWindow::showEvent( ev );
 }
 
-void TCPopup::changePopupToDialog(bool checked)
+void TCPopup::setStaysOnTop(bool onTop)
 {
-    isDialogPopup = checked;
+    staysOnTop = onTop;
     QByteArray geometry = saveGeometry();
-    if ( checked )
+    if ( onTop )
     {
         uninterceptMouse();
         setWindowFlags( Qt::Dialog );
-        setWindowTitle( "GoldenDict" );
+        setWindowTitle( "TransClip" );
         hideTimer->stop();
     }
     else
@@ -341,7 +342,7 @@ void TCPopup::changePopupToDialog(bool checked)
 void TCPopup::hideTimerExpired()
 {
     if ( isVisible() )
-        hideWindow();
+        hidePopup();
 }
 
 void TCPopup::mouseGrabPoll()
@@ -352,5 +353,5 @@ void TCPopup::mouseGrabPoll()
 
 void TCPopup::escapePressed()
 {
-    hideWindow();
+    hidePopup();
 }
