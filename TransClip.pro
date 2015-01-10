@@ -9,7 +9,8 @@ SOURCES += \
     Popup/TCDefDictWidget.cpp \
     GoogleTranslateApi/GTApi.cpp \
     GoogleTranslateApi/GTApiTranslation.cpp \
-    GoogleTranslateApi/GTReplyObject.cpp
+    GoogleTranslateApi/GTReplyObject.cpp \
+    Popup/TCTabDictWidget.cpp
 
 HEADERS += \
     Popup/TCPopupWidget.h \
@@ -20,7 +21,8 @@ HEADERS += \
     GoogleTranslateApi/GTApi.h \
     GoogleTranslateApi/GTApiTranslation.h \
     GoogleTranslateApi/GTReplyObject.h \
-    GoogleTranslateApi/GTLangCode.h
+    GoogleTranslateApi/GTLangCode.h \
+    Popup/TCTabDictWidget.h
 
 VERSION = 0.1
 QMAKE_TARGET_COMPANY = VaSaKed

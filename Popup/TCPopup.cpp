@@ -9,21 +9,17 @@
 #include <QDebug>
 
 #ifdef Q_OS_WIN
-    #include <windows.h>
+#include <windows.h>
 #endif
 
 static Qt::WindowFlags popupWindowFlags = Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint;
 
 TCPopup::TCPopup(QWidget *parent) :
-    QMainWindow(parent)
+    QWidget(parent)
 {
     staysOnTop = false;
 
-    if ( staysOnTop ) {
-        setWindowFlags( Qt::Dialog );
-    } else {
-        setWindowFlags( popupWindowFlags );
-    }
+    setWindowFlags(staysOnTop ? Qt::Dialog : popupWindowFlags);
 
     escapeAction = new QAction(this);
     escapeAction->setShortcut( QKeySequence( "Esc" ) );
@@ -193,7 +189,7 @@ bool TCPopup::eventFilter(QObject *watched, QEvent *event)
         }
     }
 
-    return QMainWindow::eventFilter( watched, event );
+    return QWidget::eventFilter( watched, event );
 }
 
 void TCPopup::reactOnMouseMove(const QPoint &p)
@@ -254,7 +250,7 @@ void TCPopup::mousePressEvent(QMouseEvent *ev)
         setCursor( Qt::ClosedHandCursor );
     }
 
-    QMainWindow::mousePressEvent( ev );
+    QWidget::mousePressEvent( ev );
 }
 
 void TCPopup::mouseMoveEvent(QMouseEvent *event)
@@ -272,18 +268,18 @@ void TCPopup::mouseMoveEvent(QMouseEvent *event)
         move( pos() + delta );
     }
 
-    QMainWindow::mouseMoveEvent( event );
+    QWidget::mouseMoveEvent( event );
 }
 
 void TCPopup::mouseReleaseEvent(QMouseEvent *ev)
 {
     unsetCursor();
-    QMainWindow::mouseReleaseEvent( ev );
+    QWidget::mouseReleaseEvent( ev );
 }
 
 void TCPopup::leaveEvent(QEvent *event)
 {
-    QMainWindow::leaveEvent( event );
+    QWidget::leaveEvent( event );
 
     // We hide the popup when the mouse leaves it.
 
@@ -301,7 +297,7 @@ void TCPopup::leaveEvent(QEvent *event)
 
 void TCPopup::enterEvent(QEvent *event)
 {
-    QMainWindow::enterEvent( event );
+    QWidget::enterEvent( event );
 
     if ( mouseEnteredOnce )
     {
@@ -315,7 +311,7 @@ void TCPopup::enterEvent(QEvent *event)
 
 void TCPopup::showEvent(QShowEvent *ev)
 {
-    QMainWindow::showEvent( ev );
+    QWidget::showEvent( ev );
 }
 
 void TCPopup::setStaysOnTop(bool onTop)

@@ -8,7 +8,10 @@
 
 TCLangBox::TCLangBox(QWidget *parent) :
     QWidget(parent)
-{
+{   
+    sourceLang_m   = "auto";
+    targetLang_m   = "en";
+    autoLangName_m = GTLangCode::langName("auto");
 
     cbxSource = new QComboBox(this);
     connect(cbxSource, SIGNAL(currentIndexChanged(int)), SLOT(sourceIndexChanged(int)));
@@ -28,6 +31,7 @@ TCLangBox::TCLangBox(QWidget *parent) :
     updateTargetCombo();
 
     QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->setMargin(0);
     layout->addWidget(cbxSource);
     layout->addWidget(cbxTarget);
     setLayout(layout);
@@ -65,6 +69,12 @@ void TCLangBox::setTargetLang(const QString &targetLang)
     updateTargetCombo();
 }
 
+void TCLangBox::setAutoLangName(const QString &autoLangName)
+{
+    autoLangName_m = autoLangName;
+    updateSourceCombo();
+}
+
 void TCLangBox::updateSourceCombo()
 {
     disconnect(cbxSource, SIGNAL(currentIndexChanged(int)), this, SLOT(sourceIndexChanged(int)));
@@ -77,7 +87,7 @@ void TCLangBox::updateSourceCombo()
     if (!sourceLangsStack.isEmpty())
         cbxSource->insertSeparator(cbxSource->count());
 
-    cbxSource->addItem(GTLangCode::langName("auto"), "auto");
+    cbxSource->addItem(autoLangName_m, "auto");
     cbxSource->insertSeparator(cbxSource->count());
 
     foreach (const QString& code, GTLangCode::langMap().keys()) {

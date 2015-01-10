@@ -3,7 +3,7 @@
 
 #include "TCPopup.h"
 #include "TCLangBox.h"
-#include "TCPosDictWidget.h"
+#include "TCTabDictWidget.h"
 #include "GoogleTranslateApi/GTApi.h"
 
 #include <QWidget>
@@ -11,20 +11,19 @@
 #include <QLabel>
 #include <QPushButton>
 
-class TCPopupWidget : public QWidget
+class TCPopupWidget : public TCPopup
 {
     Q_OBJECT
 
-    TCPopup *popup;
     QLineEdit *lneInput;
     QLabel *lblOutput;
     TCLangBox *langBox;
     QPushButton *btnDialogPopup;
 
-    TCPosDictWidget *posDictWgt;
+    TCTabDictWidget *dictsWgt;
 
 public:
-    explicit TCPopupWidget(TCPopup *parent);
+    TCPopupWidget();
 
 signals:
 
@@ -33,6 +32,7 @@ public slots:
 private slots:
     void onClipBoardChanged(QClipboard::Mode mode);
     void onInputLineEnterPressed();
+    void onLanguageChanged();
     void onTranslationReady(const GTApiTranslation& gtApiTr);
 
 private:

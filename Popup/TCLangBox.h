@@ -16,6 +16,7 @@ class TCLangBox : public QWidget
 
     QString sourceLang_m;
     QString targetLang_m;
+    QString autoLangName_m;
 
 public:
     explicit TCLangBox(QWidget *parent = 0);
@@ -31,6 +32,7 @@ signals:
 public slots:
     void setSourceLang(const QString& sourceLang);
     void setTargetLang(const QString& targetLang);
+    void setAutoLangName(const QString& autoLangName);
 
 private:
     void updateSourceCombo();

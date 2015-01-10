@@ -56,10 +56,12 @@ TCPosDictWidget::TCPosDictWidget(QWidget *parent) :
     header()->setSectionResizeMode(1, QHeaderView::Stretch);
 }
 
-void TCPosDictWidget::setPosDictionary(const QList<GTPosDict> &posDicts)
+void TCPosDictWidget::setDictData(const GTApiTranslation & gtApiTr)
 {
     QTreeWidget::clear();
     int index =0;
+
+    const QList<GTPosDict> &posDicts = gtApiTr.getPosDictionary();
 
     foreach ( const GTPosDict& dict, posDicts ) {
         TCPosDictItem *posDictItem = new TCPosDictItem(dict);

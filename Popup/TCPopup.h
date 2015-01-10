@@ -5,7 +5,7 @@
 #include <QDialog>
 #include <QClipboard>
 
-class TCPopup : public QMainWindow
+class TCPopup : public QWidget
 {
     Q_OBJECT
 

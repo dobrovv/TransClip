@@ -3,11 +3,25 @@
 
 #include <QTabWidget>
 
+#include "TCPosDictWidget.h"
+#include "TCDefDictWidget.h"
+
+#include "GoogleTranslateApi/GTApi.h"
+
 class TCTabDictWidget : public QTabWidget
 {
     Q_OBJECT
+
+    int posDictIdx;
+    int defDictIdx;
+
+    TCPosDictWidget *posDictWgt;
+    TCDefDictWidget *defDictWgt;
+
 public:
-    explicit TCTabDictWidget(QObject *parent = 0);
+    explicit TCTabDictWidget(QWidget *parent = 0);
+    void setDictsData(const GTApiTranslation &gtApiTr);
+
 
 signals:
 
