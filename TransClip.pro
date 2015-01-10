@@ -31,4 +31,18 @@ QMAKE_TARGET_DESCRIPTION = TransClip - Online Translator
 QMAKE_TARGET_COPYRIGHT =
 
 OTHER_FILES += \
-    GoogleTranslateApi/GoogleWebTranslateFormat.txt
+    GoogleTranslateApi/GoogleWebTranslateFormat.txt \
+    release/icudt51.dll \
+    release/icuin51.dll \
+    release/icuuc51.dll \
+    release/libgcc_s_dw2-1.dll \
+    release/libstdc++-6.dll \
+    release/libwinpthread-1.dll \
+    release/Qt5Core.dll \
+    release/Qt5Gui.dll \
+    release/Qt5Network.dll \
+    release/Qt5Widgets.dll \
+    release/TransClip.exe \
+    img/screenshot.jpg \
+    img/screenshot_small.jpg \
+    img/pin.ico
